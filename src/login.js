@@ -3,8 +3,7 @@ import axios from './axios';
 import { Link } from 'react-router-dom';
 
 
-
-export default class Register extends React.Component {
+export default class Login extends React.Component {
     constructor(props){
         super(props);
         this.state = {};
@@ -16,14 +15,13 @@ export default class Register extends React.Component {
     }
     submit(){
         console.log("submiting");
-        axios.post('/register', {
-            first: this.first,
-            last: this.last,
+        axios.post('/login', {
             email: this.email,
             pass: this.pass
-        }).then(({data}) => {
-            console.log("i got a respond", {data});
-            if (data.success){
+        }).then((respond) => {
+            console.log("i got a respond");
+            console.log(respond);
+            if (respond.data.success){
                 location.replace('/');
             } else {
                 this.setState({
@@ -34,16 +32,13 @@ export default class Register extends React.Component {
     }
     render() {
         return (
-            <div className="registration_fields">
-                <input name='first' placeholder="First name" onChange={this.handleChange} />
-                <input name='last' placeholder="Last name" onChange={this.handleChange}/>
+            <div>
                 <input name='email' placeholder="E-mail address" onChange={this.handleChange}/>
                 <input name='pass' type="password" placeholder="Pass word" onChange={this.handleChange}/>
-                <button onClick={this.submit}>Register</button>
-                <Link to="/login">Click here to Log in!</Link>
+                <button onClick={this.submit}>Log in</button>
+                <Link to="/register">Click here to Register!</Link>
+
             </div>
         );
     }
 }
-
-// {this.state.error && <div className="error">Ooops!</div>}

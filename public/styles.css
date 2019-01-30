@@ -1,3 +1,23 @@
-*{
-    background-color: white;
+html{
+    height: 100vh;
+    width: 100vw;
+}
+body{
+    margin: 0;
+}
+main {
+    height: 100vh;
+    width: 100vw;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.registration_fields{
+    display: flex;
+}
+.home_page_logo {
+    height: 300px;
+    width: auto;
+
 }

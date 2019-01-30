@@ -17,15 +17,9 @@ module.exports.registerUser = (first, last, email, hash)=>{
 };
 
 
-
-
-
-
-// module.exports.getUserInfoByEmail = function(email){
-//     return db.query(`SELECT password, first, last, users.id, signatures.id AS sigid
-//         FROM users
-//         LEFT JOIN signatures
-//         ON users.id = signatures.user_id
-//         WHERE email = $1`, [email]
-//     );
-// };
+module.exports.getUserByEmail = function(email){
+    return db.query(`SELECT *
+        FROM users
+        WHERE email = $1`, [email]
+    );
+};

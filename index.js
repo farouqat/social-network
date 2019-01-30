@@ -4,6 +4,8 @@ const compression = require('compression');
 const cookieSession = require("cookie-session");
 const bcrypt = require("./bcrypt.js");
 const db = require("./db");
+const csurf = require("csurf");
+
 
 app.use(compression());
 
@@ -17,6 +19,16 @@ app.use(
         maxAge: 1000 * 60 * 60 * 24 * 14
     })
 );
+
+
+app.use(csurf());
+
+app.use(function(req, res, next){
+    res.cookie('mytoken', req.csrfToken());
+    next();
+});
+
+
 
 if (process.env.NODE_ENV != 'production') {
     app.use(
@@ -49,14 +61,13 @@ app.post('/register', (req, res) => {
         bcrypt
             .hashPassword(req.body.pass)
             .then(function(hash) {
-                console.log("hashhhhh",hash);
+                console.log("hash!!!!!!",hash);
                 return db.registerUser(
                     req.body.first,
                     req.body.last,
                     req.body.email,
                     hash
                 );
-
             })
             .then((data) => {
                 console.log("data",data.rows);
@@ -81,6 +92,50 @@ app.post('/register', (req, res) => {
     }
 });
 
+app.post('/login', (req, res) => {
+    if (
+        !req.body.email ||
+        !req.body.pass
+    ) {
+        res.sendFile(__dirname + '/index.html');
+    } else {
+        return db.getUserByEmail(req.body.email)
+            .then((results) => {
+                const data = results.rows[0];
+                if (data){
+                    return  bcrypt
+                        .checkPassword(req.body.pass, data.password)
+                        .then((doesMatch) => {
+                            console.log("password checked!");
+                            if (doesMatch) {
+                                console.log("doesMatch", doesMatch);
+                                req.session = {
+                                    userId: data.id,
+                                    first: data.first,
+                                    last: data.last
+                                };
+                                res.json({ success: true });
+                            } else {
+                                console.log("wrong password");
+                                res.json({ success: false });
+                            }
+                        });
+                } else {
+                    console.log("no such user");
+                    res.json({
+                        success: false
+                    });
+                }
+            })
+            .catch(function(err) {
+                console.log("ERROR", err);
+                res.json({
+                    success: false
+                });
+            });
+    }
+});
+
 app.get('*', function(req, res) {
     if (!req.session.userId) {
         res.redirect('/welcome');
@@ -88,6 +143,7 @@ app.get('*', function(req, res) {
         res.sendFile(__dirname + '/index.html');
     }
 });
+
 
 app.listen(8080, function() {
     console.log("I'm listening.");
