@@ -17,9 +17,24 @@ module.exports.registerUser = (first, last, email, hash)=>{
 };
 
 
-module.exports.getUserByEmail = function(email){
+module.exports.getUserByEmail = (email) => {
     return db.query(`SELECT *
         FROM users
         WHERE email = $1`, [email]
+    );
+};
+module.exports.getUserInfo = (userId) => {
+    return db.query(`SELECT *
+        FROM users
+        WHERE id = $1`, [userId]
+    );
+};
+module.exports.addImage = (pic_url, userId) => {
+    return db.query(
+        `UPDATE users
+        SET
+        profilepic_url = $1
+        WHERE id = $2
+        RETURNING *`, [pic_url, userId]
     );
 };

@@ -10,9 +10,9 @@ export default function Welcome () {
         <div>
             <HashRouter>
                 <div>
-                    <img className="home_page_logo" src="logo.jpg" />
+                    <img className="home_page_logo" src="logo.png" />
                     <div className="whole">
-                    Welcome.
+                    Welcome
                     </div>
                     <div>
                     RED EYE is a social network for those who can not sleep

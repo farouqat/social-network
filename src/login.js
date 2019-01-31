@@ -14,7 +14,6 @@ export default class Login extends React.Component {
         this[e.target.name] = e.target.value;
     }
     submit(){
-        console.log("submiting");
         axios.post('/login', {
             email: this.email,
             pass: this.pass
