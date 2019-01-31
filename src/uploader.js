@@ -16,10 +16,7 @@ export default class Uploader extends React.Component {
         var uploadedFile = file.files[0];
         var formData = new FormData();
         formData.append('file', uploadedFile);
-        console.log(formData);
         axios.post('/upload', formData).then(function(response) {
-            console.log("this is the response", response);
-            console.log("this is the url", response.data.profilepic_url);
             self.props.setImage(response.data.profilepic_url);
 
         })
@@ -29,8 +26,7 @@ export default class Uploader extends React.Component {
     }
     render(){
         return (
-            <div>
-                <h1>Uploader</h1>
+            <div className="uploader_comp">
                 <input type="file" id="profilepic"/>
                 <button onClick={this.submit}>Upload </button>
             </div>

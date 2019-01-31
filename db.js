@@ -47,3 +47,29 @@ module.exports.addBio = (text, userId) => {
         RETURNING *`, [text, userId]
     );
 };
+module.exports.getUserById = (id) => {
+    return db.query(`SELECT *
+        FROM users
+        WHERE id = $1`, [id]
+    );
+};
+module.exports.getInitialFriendship = (loggedInId, otherUserId) => {
+    return db.query(`SELECT *
+        FROM friendships
+        WHERE (recipient_id = $1 AND sender_id = $2)
+        OR (recipient_id = $2 AND sender_id = $1)`, [loggedInId, otherUserId]
+    );
+};
+module.exports.makeFriendRequest = (loggedInId, otherUserId)=>{
+    return db.query(
+        `INSERT INTO friendships (sender_id, recipient_id) VALUES ($1, $2) RETURNING *`,
+        [loggedInId, otherUserId]
+    );
+};
+module.exports.deleteFriendRequest = (loggedInId, otherUserId)=>{
+    return db.query(
+        `DELETE FROM friendships
+        WHERE (recipient_id = $1 AND sender_id = $2)
+        OR (recipient_id = $2 AND sender_id = $1)`, [loggedInId, otherUserId]
+    );
+};

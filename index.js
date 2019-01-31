@@ -14,6 +14,7 @@ const path = require('path');
 
 
 
+
 var diskStorage = multer.diskStorage({
     destination: function (req, file, callback) {
         callback(null, __dirname + '/uploads');
@@ -99,7 +100,6 @@ app.post('/register', (req, res) => {
                 );
             })
             .then((data) => {
-                console.log("data",data.rows);
                 req.session = {
                     userId: data.rows[0].id,
                     first: data.rows[0].first,
@@ -135,9 +135,7 @@ app.post('/login', (req, res) => {
                     return  bcrypt
                         .checkPassword(req.body.pass, data.password)
                         .then((doesMatch) => {
-                            console.log("password checked!");
                             if (doesMatch) {
-                                console.log("doesMatch", doesMatch);
                                 req.session = {
                                     userId: data.id,
                                     first: data.first,
@@ -170,7 +168,6 @@ app.post('/upload', uploader.single('file'), s3.upload, (req, res) => {
         return db.addImage(
             config.s3Url + req.file.filename , req.session.userId
         ).then(({rows}) => {
-            console.log("this is rows 0", rows[0]);
             res.json(rows[0]);
         }).catch(err => console.log(err));
     } else {
@@ -181,9 +178,39 @@ app.post('/upload', uploader.single('file'), s3.upload, (req, res) => {
 });
 app.post("/bio", (req, res) => {
     return db.addBio(req.body.bio, req.session.userId).then((results) => {
-        console.log(results);
         res.json({results
         });
+    });
+});
+
+app.get('/user/:id.json', (req, res) => {
+    if (req.session.userId == req.params.id) {
+        return res.json({
+            redirectTo: '/'
+        });
+    }
+    return db.getUserById(req.params.id).then(({rows}) => {
+        res.json(rows);
+    // if(data.redirectTo){
+    //     this.props.history.push(data.redirectTo);
+    // }
+    });
+});
+app.get('/get-initial-status/:id', (req, res) => {
+    db.getInitialFriendship(req.session.userId, req.params.id).then((results) => {
+        res.json(results);
+    });
+});
+app.get('/make-friend-request/:id', (req, res) => {
+    db.makeFriendRequest(req.session.userId, req.params.id).then((results) => {
+        console.log(results);
+        res.json(results);
+    });
+});
+app.post('/delete-friend-request/:id', (req, res) => {
+    db.deleteFriendRequest(req.session.userId, req.params.id).then((results) => {
+        console.log(results);
+        res.json(results);
     });
 });
 

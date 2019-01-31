@@ -16,14 +16,12 @@ export default class Register extends React.Component {
         this[e.target.name] = e.target.value;
     }
     submit(){
-        console.log("submiting");
         axios.post('/register', {
             first: this.first,
             last: this.last,
             email: this.email,
             pass: this.pass
         }).then(({data}) => {
-            console.log("i got a respond", {data});
             if (data.success){
                 location.replace('/');
             } else {

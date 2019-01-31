@@ -18,7 +18,6 @@ export default class BioEditor extends React.Component {
     submit(e) {
         e.preventDefault();
         axios.post("/bio", { bio: this.bio }).then(results => {
-            console.log(results);
             this.props.setBio(results.data.results.rows[0].bio);
             this.setState({ bioEditorIsVisible: false });
         });

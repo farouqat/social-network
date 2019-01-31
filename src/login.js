@@ -18,8 +18,6 @@ export default class Login extends React.Component {
             email: this.email,
             pass: this.pass
         }).then((respond) => {
-            console.log("i got a respond");
-            console.log(respond);
             if (respond.data.success){
                 location.replace('/');
             } else {
