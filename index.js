@@ -179,6 +179,13 @@ app.post('/upload', uploader.single('file'), s3.upload, (req, res) => {
         });
     }
 });
+app.post("/bio", (req, res) => {
+    return db.addBio(req.body.bio, req.session.userId).then((results) => {
+        console.log(results);
+        res.json({results
+        });
+    });
+});
 
 app.get('/user', (req, res) => {
     return db.getUserInfo(req.session.userId).then((results) => {

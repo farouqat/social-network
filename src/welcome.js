@@ -15,7 +15,7 @@ export default function Welcome () {
                     Welcome
                     </div>
                     <div>
-                    RED EYE is a social network for those who can not sleep
+                    RED EYE is a social network for those who cannot sleep
                     </div>
                     <Route exact path="/" component= {register} />
                     <Route  path="/login" component= {login} />

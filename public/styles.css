@@ -30,3 +30,7 @@ main {
     width: 300px;
     object-fit: cover;
 }
+.bio_input{
+    height: 100px;
+    width: 300px;
+}

@@ -7,7 +7,8 @@ import { Link } from 'react-router-dom';
 export default class Register extends React.Component {
     constructor(props){
         super(props);
-        this.state = {};
+        this.state = {
+        };
         this.handleChange = this.handleChange.bind(this);
         this.submit = this.submit.bind(this);
     }
