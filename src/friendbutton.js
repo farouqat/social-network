@@ -10,61 +10,56 @@ export default class FriendButton extends React.Component {
         this.updateFriendship = this.updateFriendship.bind(this);
     }
     componentDidMount(){
-        const self = this;
-        axios.get('/get-initial-status/'+ self.props.otherUserId).then((resp) => {
+        axios.get('/get-initial-status/'+ this.props.otherUserId).then((resp) => {
             if (!resp.data.rows[0]) {
                 console.log("no resp");
-                self.setState({
-                    buttonText: 'Send Friend request'
+                this.setState({
+                    buttonText: 'Send Friend Request'
                 });
             } else if (resp.data.rows[0].accepted == true){
                 console.log("it's accepted");
-                self.setState({
+                this.setState({
                     buttonText: 'Unfriend'
+                });
+            } else if (resp.data.rows[0].sender_id == this.props.otherUserId
+                && resp.data.rows[0].accepted == false){
+                this.setState({
+                    buttonText: 'Accept Friend Request'
                 });
             } else {
                 console.log("not accepted");
-                self.setState({
+                this.setState({
                     buttonText: 'Cancel Friend Request'
                 });
             }
         });
     }
+
     updateFriendship(){
-        const self = this;
-        if (self.state.buttonText == 'Send Friend request'){
-            axios.get('/make-friend-request/'+ self.props.otherUserId);
-            self.setState({
+        if (this.state.buttonText == 'Send Friend Request'){
+            console.log("request sent");
+            axios.post('/make-friend-request/'+ this.props.otherUserId);
+            this.setState({
                 buttonText: 'Cancel Friend Request'
             });
-        } else if (self.state.buttonText == 'Cancel Friend Request'){
-            axios.post('/delete-friend-request/'+ self.props.otherUserId);
-            self.setState({
-                buttonText: 'Cancel Friend Request'
+        } else if (this.state.buttonText == 'Cancel Friend Request'){
+            console.log("request canceled");
+            axios.post('/delete-friend-request/'+ this.props.otherUserId);
+            this.setState({
+                buttonText: 'Send Friend Request'
             });
-        } else {
-            console.log("blabla");
+        } else if (this.state.buttonText == 'Accept Friend Request'){
+            axios.post('/accept-friend-request/'+ this.props.otherUserId);
+            this.setState({
+                buttonText: 'Unfriend'
+            });
+        } else if (this.state.buttonText == 'Unfriend'){
+            axios.post('/delete-friend-request/'+ this.props.otherUserId);
+            this.setState({
+                buttonText: 'Send Friend Request'
+            });
         }
 
-        axios.get('/make-friend-request/'+ self.props.otherUserId).then((resp) => {
-            var accepted = resp.data.rows[0].accepted;
-            console.log("accepted", accepted);
-            if (accepted) {
-                self.setState= {
-                    buttonText: 'Unfriend'
-                };
-            } else {
-                self.setState= {
-                    buttonText: 'Cancel Friend request'
-                };
-            }
-        });
-        // here is where all the post routes are going to do
-        // what does buttonText say? Do something different based off of what buttonText says!
-        // if button says "Make friend request" when it was clicked, then we need to INSERT into friendships table
-        // this.setState({
-        //     buttonText: 'Delete Friend Request'
-        // });
     }
     render(){
         return(

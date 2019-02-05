@@ -22,11 +22,35 @@ main {
     width: auto;
     top: 20;
     left: 0;
-
 }
-.profile_pic{
+.header img{
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    height: 80px;
+    width: 100%;
+}
+.other_profile_comp{
+    border: 5px solid black;
+    margin-left: 50px;
+    margin-right: 50px;
     height: 300px;
-    width: 300px;
+    display: flex;
+}
+.other_profile_profilepic{
+    height: 70px;
+    width: 70px;
+    object-fit: cover;
+}
+
+.profile_pic{
+    /* height: 70px;
+    width: 70px; */
     object-fit: cover;
 }
 
@@ -35,30 +59,29 @@ main {
     width: 300px;
 }
 .profile_comp{
-    border: 5px solid black;
+    border: 5px solid blue;
     margin-left: 50px;
     margin-right: 50px;
     height: 300px;
     display: flex;
 }
+.profile_comp img{
+    height: 300px;
+    width: 300px;
+}
 .bio_comp{
     background-color: white;
 
 }
-.profile_pic_corner{
-    height: 70px;
-    width: 70px;
-    margin-top: 0;
-    margin-right: 0;
 
-}
 .uploader_comp{
     background-color: blue;
     height: 100px;
     width:500px;
     display: flex;
+    flex-direction: column;
     border: 5px solid black;
     align-items: center;
     justify-content: space-around;
-    /* position: fixed; */
+    position: absolute;
 }

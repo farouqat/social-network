@@ -9,6 +9,9 @@ export default class OtherProfile extends React.Component {
     }
     componentDidMount(){
         axios.get(`/user/${this.props.match.params.id}.json`).then((results)=>{
+            if (results.data.redirectTo){
+                this.props.history.push(results.data.redirectTo);
+            }
             this.setState({
                 first: results.data[0].first,
                 last: results.data[0].last,
@@ -20,8 +23,8 @@ export default class OtherProfile extends React.Component {
     }
     render() {
         return (
-            <div className="">
-                <img src={this.state.profilepic_url} />
+            <div className="other_profile_comp">
+                <img className="other_profile_profilepic" src={this.state.profilepic_url} />
                 <h4>{this.state.first} {this.state.last} {this.state.bio}
                 </h4>
                 <FriendButton

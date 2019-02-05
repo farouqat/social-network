@@ -73,3 +73,12 @@ module.exports.deleteFriendRequest = (loggedInId, otherUserId)=>{
         OR (recipient_id = $2 AND sender_id = $1)`, [loggedInId, otherUserId]
     );
 };
+module.exports.acceptFriendRequest = (loggedInId, otherUserId)=>{
+    return db.query(
+        `UPDATE friendships
+        SET  accepted = true
+        WHERE (recipient_id = $1 AND sender_id = $2)
+        OR (recipient_id = $2 AND sender_id = $1)
+        `, [loggedInId, otherUserId]
+    );
+};

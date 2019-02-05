@@ -191,9 +191,6 @@ app.get('/user/:id.json', (req, res) => {
     }
     return db.getUserById(req.params.id).then(({rows}) => {
         res.json(rows);
-    // if(data.redirectTo){
-    //     this.props.history.push(data.redirectTo);
-    // }
     });
 });
 app.get('/get-initial-status/:id', (req, res) => {
@@ -201,7 +198,7 @@ app.get('/get-initial-status/:id', (req, res) => {
         res.json(results);
     });
 });
-app.get('/make-friend-request/:id', (req, res) => {
+app.post('/make-friend-request/:id', (req, res) => {
     db.makeFriendRequest(req.session.userId, req.params.id).then((results) => {
         console.log(results);
         res.json(results);
@@ -209,6 +206,12 @@ app.get('/make-friend-request/:id', (req, res) => {
 });
 app.post('/delete-friend-request/:id', (req, res) => {
     db.deleteFriendRequest(req.session.userId, req.params.id).then((results) => {
+        console.log(results);
+        res.json(results);
+    });
+});
+app.post('/accept-friend-request/:id', (req, res) => {
+    db.acceptFriendRequest(req.session.userId, req.params.id).then((results) => {
         console.log(results);
         res.json(results);
     });

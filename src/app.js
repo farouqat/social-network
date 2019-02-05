@@ -50,11 +50,13 @@ export default class App extends React.Component {
             <div>
                 <BrowserRouter>
                     <div>
-                        <img className="logo" src="/logo-s.png" />
-                        <h1>Welcome, {this.state.first}!</h1>
-                        <div className="profile_pic_corner">
-                            <ProfilePic url={this.state.profilepic_url}
-                                showUploader={this.showUploader} />
+                        <div className="header">
+                            <img className="logo" src="/logo-s.png" />
+                            <h1>Welcome, {this.state.first}!</h1>
+                            <div className="small_profilepic">
+                                <ProfilePic url={this.state.profilepic_url}
+                                    showUploader={this.showUploader} />
+                            </div>
                         </div>
                         <div>
                             <Route
@@ -65,6 +67,7 @@ export default class App extends React.Component {
                                         id={this.state.id}
                                         first={this.state.first}
                                         last={this.state.last}
+                                        url={this.state.profilepic_url}
                                         image={this.state.image}
                                         onClick={this.showUploader}
                                         bio={this.state.bio}
