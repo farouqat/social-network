@@ -49,9 +49,12 @@ main {
 }
 
 .profile_pic{
-    /* height: 70px;
-    width: 70px; */
+
     object-fit: cover;
+}
+.other_profile_comp img{
+    height: 300px;
+    width: 300px;
 }
 
 .bio_input{
