@@ -9,13 +9,12 @@ if (process.env.DATABASE_URL) {
 }
 
 
-module.exports.registerUser = (first, last, email, hash)=>{
+module.exports.registerUser = (first, last, email, hash, profilepic_url)=>{
     return db.query(
-        `INSERT INTO users (first, last, email, password) VALUES ($1, $2, $3, $4) RETURNING *`,
-        [first, last, email, hash]
+        `INSERT INTO users (first, last, email, password, profilepic_url) VALUES ($1, $2, $3, $4, $5) RETURNING *`,
+        [first, last, email, hash, profilepic_url]
     );
 };
-
 
 module.exports.getUserByEmail = (email) => {
     return db.query(`SELECT *
@@ -87,13 +86,17 @@ module.exports.receiveFriendsWannabes = (loggedInId)=> {
     SELECT users.id, first, last, profilepic_url, accepted
     FROM friendships
     JOIN users
-    ON (accepted = false AND sender_id = $1 AND recipient_id = users.id)
-    OR (accepted = false AND recipient_id = $1 AND sender_id = users.id)
-    OR (accepted = true AND sender_id = $1 AND sender_id = users.id)`,[loggedInId]
+    ON (accepted = false AND recipient_id = $1 AND sender_id = users.id)
+    OR (accepted = true AND recipient_id = $1 AND sender_id = users.id)
+    OR (accepted = true AND sender_id = $1 AND recipient_id = users.id)`,[loggedInId]
     );
 };
 
 module.exports.getUsersByIds =  function (arrayOfIds) {
     return db.query(`SELECT id, first, last, profilepic_url FROM users WHERE id = ANY($1)`,[arrayOfIds]
+    );
+};
+module.exports.addMessage = function (message, sender_id) {
+    return db.query(`INSERT INTO messages (messages, sender_id) VALUES ($1, $2) RETURNING *`,[message, sender_id]
     );
 };

@@ -17,28 +17,31 @@ class Friends extends React.Component {
         }
         return (
             <div>
-                <div> Friends
+                <h2 className="friends_lable"> Your friends </h2>
+                <div className="friends_comp">
                     {this.props.friends && this.props.friends.map(
                         f => {
                             return (
-                                <div key = {f.id} >
-                                    { f.first }
-                                    { f.last }
+                                <div className="friend" key = {f.id} >
                                     <img src={f.profilepic_url} />
-                                    <button onClick={() => this.props.dispatch(unfriend(f.id))}>Unfriend</button>
+                                    <div>
+                                        <h5> { f.first } { f.last } </h5>
+                                        <button onClick={() => this.props.dispatch(unfriend(f.id))}>Unfriend</button>
+                                    </div>
                                 </div>
                             );
                         }
                     )}
                 </div>
-                <div> Friends requests
+                <h2 className="friends_lable"> Friends requests</h2>
+                <div className="friends_comp">
                     {this.props.pending && this.props.pending.map(
                         w => {
                             return (
-                                <div key = {w.id} >
-                                    { w.first }
-                                    { w.last }
+
+                                <div className="friend" key = {w.id} >
                                     <img src={w.profilepic_url} />
+                                    <h5> { w.first } { w.last } </h5>
                                     <button onClick={() => this.props.dispatch(acceptFriendRequest(w.id))}>Accept friend request</button>
                                 </div>
                             );
@@ -51,7 +54,7 @@ class Friends extends React.Component {
 }
 
 const mapStateToProps = function(state) {
-    console.log("state at friends component",state);
+    console.log("this is the state in the friends comp", state);
     return {
         friends: state.list && state.list.filter(list => list.accepted === true),
         pending: state.list && state.list.filter(list => list.accepted === false)

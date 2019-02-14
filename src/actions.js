@@ -1,5 +1,8 @@
 import axios from './axios';
 
+
+
+
 export function receiveFriendsWannabes(){
     return axios.get("/friends-and-wannabes").then((results) => {
         return {
@@ -28,7 +31,6 @@ export function unfriend(friendid){
 }
 
 export function onlines(onlineUsers){
-    console.log("onlineUsers in action", onlineUsers);
     return {
         type: 'ONLINE_USERS',
         onlineUsers: onlineUsers
@@ -47,10 +49,10 @@ export function userLeft(deletedId){
     };
 }
 
-export function send(sentmessage){
+export function send(sentdata){
     return {
         type: 'SEND_MESSAGE',
-        sentmessage: sentmessage
+        sentdata: sentdata
     };
 
 }

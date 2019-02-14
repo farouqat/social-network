@@ -29,12 +29,12 @@ export default class Login extends React.Component {
     }
     render() {
         return (
-            <div>
-                <input name='email' placeholder="E-mail address" onChange={this.handleChange}/>
-                <input name='pass' type="password" placeholder="Pass word" onChange={this.handleChange}/>
-                <button onClick={this.submit}>Log in</button>
-                <Link to="/register">Click here to Register!</Link>
-
+            <div className="registration_fields">
+                <h2>Log in</h2>
+                <input className="registration_inputs" name='email' placeholder="E-mail address" onChange={this.handleChange}/>
+                <input className="registration_inputs" name='pass' type="password" placeholder="Pass word" onChange={this.handleChange}/>
+                <button className="registration_button" onClick={this.submit}>Log in</button>
+                <Link to="/">Click here to Register!</Link>
             </div>
         );
     }

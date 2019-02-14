@@ -39,10 +39,10 @@ export default function (state = {}, action) {
         };
     }
 
-    // if (action.type == 'SEND_MESSAGE') {
-    //     state = { ...state, sentmessage : action.sentmessage};
-    //
-    // }
+    if (action.type == 'SEND_MESSAGE') {
+        state = { ...state, sentdata : action.sentdata};
+
+    }
 
     console.log("REDUX STATE", state);
     return  state ;

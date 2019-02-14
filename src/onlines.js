@@ -11,39 +11,31 @@ class Onlines extends React.Component {
         if (!this.props.onlines){
             return null;
         }
-        console.log("this props", this.props);
         return (
-            <div className="">
-                <div className="">
-                    <h1>Online users: </h1>
-                    {this.props.onlines && this.props.onlines.map(
-                        i => {
-                            return (
-                                <div key={i.id}>
-                                    {<Link to={`/user/${i.id}`}>
-                                        <div className="">
-                                            <img src={i.url || 'https://s3.amazonaws.com/spicedling/TlorU-1JCemXV7-MmulwJzw_SqorVHcD.png'} />
-                                        </div>
-                                        <div className="user_info">
-                                            <h2>{i.first} {i.last}</h2>
-                                        </div>
-                                    </Link>}
-                                </div>
-                            );
-                        }
-                    )}
-                </div>
+
+            <div>
+                <h1>Online users: </h1>
+                {this.props.onlines && this.props.onlines.map(
+                    i => {
+                        return (
+                            <div className="online_friend"  key={i.id}>
+                                {<Link to={`/user/${i.id}`}>
+                                    <img src={i.profilepic_url} />
+                                    <h2>{i.first} {i.last}</h2>
+                                </Link>}
+                            </div>
+                        );
+                    }
+                )}
             </div>
         );
     }
 }
 const mapStateToProps = function(state) {
-    console.log("this is the state in online", state);
     return {
         onlines: state.onlineUsers
     };
 
 };
-
 
 export default connect(mapStateToProps)(Onlines);

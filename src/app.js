@@ -55,7 +55,7 @@ export default class App extends React.Component {
                             <div className="logo_container">
                                 <img className="logo" src="/logo-s.png" />
                             </div>
-                            <h1>Welcome, {this.state.first}!</h1>
+                            <h1>Welcome {this.state.first}</h1>
                             <div className="small_profilepic">
                                 <ProfilePic url={this.state.profilepic_url}
                                     showUploader={this.showUploader} />

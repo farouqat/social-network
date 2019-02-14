@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {initSocket} from './socket';
-import { send } from './actions';
+// import { send } from './actions';
 
 class Chat extends React.Component{
     constructor(props){
@@ -10,15 +10,28 @@ class Chat extends React.Component{
             textOfMessage: ''
         };
         this.handleChange = this.handleChange.bind(this);
+        this.submit = this.submit.bind(this);
     }
+    //
+    // componentDidUpdate(){
+    //     initSocket().emit
+    // }
 
     handleChange(e) {
         this.setState({
             textOfMessage: e.target.value
         });
     }
+    submit(){
+        initSocket().emit('userSentMessage', {
+            message: this.state.textOfMessage,
+            first: this.props.name,
+            last: this.props.last,
+            picture: this.props.profilepic_url
+        }
+        );
+    }
     reset() {
-        initSocket().emit('userSentMessage', this.state.textOfMessage);
         this.setState({
             textOfMessage: ''
         });
@@ -31,23 +44,30 @@ class Chat extends React.Component{
                 </textarea>
                 <button
                     onClick={() => {
-                        initSocket().emit('chatMessage', this.message);
-                        this.reset();}
+                        this.submit();
+                        this.reset();
+                    }
                     }
                 >
                     send
                 </button>
+                <div>
+                    messages:
+                    <ul>
+                        <li>{this.props.first}{this.props.sentdata}</li>
+                    </ul>
+                </div>
             </div>
         );
     }
 }
 
 const mapStateToProps = function(state) {
-    if (!state.sentmessage) {
+    if (!state.sentdata) {
         return {};
     } else {
         return {
-            sentmessage: state.sentmessage
+            sentdata: state.sentdata
         };
     }
 };

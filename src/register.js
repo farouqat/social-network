@@ -20,7 +20,8 @@ export default class Register extends React.Component {
             first: this.first,
             last: this.last,
             email: this.email,
-            pass: this.pass
+            pass: this.pass,
+            profilepic_url: 'https://s3.amazonaws.com/spicedling/TlorU-1JCemXV7-MmulwJzw_SqorVHcD.png'
         }).then(({data}) => {
             if (data.success){
                 location.replace('/');
@@ -34,12 +35,13 @@ export default class Register extends React.Component {
     render() {
         return (
             <div className="registration_fields">
-                <input name='first' placeholder="First name" onChange={this.handleChange} />
-                <input name='last' placeholder="Last name" onChange={this.handleChange}/>
-                <input name='email' placeholder="E-mail address" onChange={this.handleChange}/>
-                <input name='pass' type="password" placeholder="Pass word" onChange={this.handleChange}/>
-                <button onClick={this.submit}>Register</button>
-                <Link to="/login">Click here to Log in!</Link>
+                <h2>Register now</h2>
+                <input className="registration_inputs" name='first' placeholder="First name" onChange={this.handleChange} />
+                <input className="registration_inputs" name='last' placeholder="Last name" onChange={this.handleChange}/>
+                <input className="registration_inputs" name='email' placeholder="E-mail address" onChange={this.handleChange}/>
+                <input className="registration_inputs" name='pass' type="password" placeholder="Pass word" onChange={this.handleChange}/>
+                <button className="registration_button" onClick={this.submit}>Register</button>
+                <Link className="link" to="/login">Click here to Log in!</Link>
             </div>
         );
     }

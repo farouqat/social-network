@@ -98,9 +98,8 @@ app.post('/register', (req, res) => {
                     req.body.first,
                     req.body.last,
                     req.body.email,
-                    hash
-
-
+                    hash,
+                    req.body.profilepic_url
                 );
             })
             .then((data) => {
@@ -196,6 +195,7 @@ app.get('/user/:id.json', (req, res) => {
     return db.getUserById(req.params.id).then(({rows}) => {
         res.json(rows);
     });
+
 });
 app.get('/get-initial-status/:id', (req, res) => {
     db.getInitialFriendship(req.session.userId, req.params.id).then((results) => {
@@ -265,9 +265,7 @@ io.on('connection', function(socket){
 
     var userIds = Object.values(onlineUsers);
 
-    console.log(userIds);
     db.getUsersByIds(userIds).then((results) => {
-        console.log("this is results from db in index",results.rows);
         socket.emit('onlines',
             results.rows.filter(i => {
                 return i.id !== socket.request.session.userId;
@@ -276,13 +274,11 @@ io.on('connection', function(socket){
     });
 
     db.getUserInfo(socket.request.session.userId).then(results => {
-        console.log("the results supposed to be my data", results.rows[0]);
         socket.broadcast.emit('userJoined', results.rows[0]);
     });
 
 
     socket.on('disconnect', () => {
-        console.log("this it the disconnected user server id", onlineUsers[socket.id]);
         let deletedId = onlineUsers[socket.id];
         io.sockets.emit('userLeft', {
             id: deletedId
@@ -290,11 +286,22 @@ io.on('connection', function(socket){
         delete onlineUsers[socket.id];
     });
 
+    socket.on('userSentMessage', message => {
+        db.getUserById(socket.request.session.userId).then(userdata => {
+            message.first = userdata.rows[0].first;
+            message.last = userdata.rows[0].last;
+            message.profilepic_url = userdata.rows[0].profilepic_url;
+        });
+        db.addMessage(message.message, socket.request.session.userId)
+            .then(data => {
+                socket.emit('newMessage', data.rows[0].messages);
+            })
+            .catch(err => console.log(err.message));
+    });
 
-    // socket.emit('chatMessage', messages);
-    //
+
     // socket.emit('chatMessages', users );
-    //
+    //;
     //
 
 });
@@ -310,7 +317,10 @@ io.on('connection', function(socket){
 //     });
 // });
 
-//
+
+
+
+
 // <button onClick={e => {
 //     socket.getSocket().emit('chatMessage')
 // }} send </button>

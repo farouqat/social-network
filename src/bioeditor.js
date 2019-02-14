@@ -31,8 +31,8 @@ export default class BioEditor extends React.Component {
         return (
             <div className="bio_editer">
                 <h4> {this.props.bio} </h4>
-                { this.props.bio ? <button onClick={this.showBioEditor}> Edit </button> :
-                    <button onClick={this.showBioEditor}> Add your bio now </button>
+                { this.props.bio ? <button onClick={this.showBioEditor}> Edit bio </button> :
+                    <button className="bio_button" onClick={this.showBioEditor}> Add your bio now </button>
                 }
                 {this.state.bioEditorIsVisible && <div><input
                     className="bio_input"

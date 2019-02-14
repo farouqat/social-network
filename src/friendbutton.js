@@ -12,12 +12,10 @@ export default class FriendButton extends React.Component {
     componentDidMount(){
         axios.get('/get-initial-status/'+ this.props.otherUserId).then((resp) => {
             if (!resp.data.rows[0]) {
-                console.log("no resp");
                 this.setState({
                     buttonText: 'Send Friend Request'
                 });
             } else if (resp.data.rows[0].accepted == true){
-                console.log("it's accepted");
                 this.setState({
                     buttonText: 'Unfriend'
                 });
@@ -27,7 +25,6 @@ export default class FriendButton extends React.Component {
                     buttonText: 'Accept Friend Request'
                 });
             } else {
-                console.log("not accepted");
                 this.setState({
                     buttonText: 'Cancel Friend Request'
                 });
@@ -37,13 +34,11 @@ export default class FriendButton extends React.Component {
 
     updateFriendship(){
         if (this.state.buttonText == 'Send Friend Request'){
-            console.log("request sent");
             axios.post('/make-friend-request/'+ this.props.otherUserId);
             this.setState({
                 buttonText: 'Cancel Friend Request'
             });
         } else if (this.state.buttonText == 'Cancel Friend Request'){
-            console.log("request canceled");
             axios.post('/delete-friend-request/'+ this.props.otherUserId);
             this.setState({
                 buttonText: 'Send Friend Request'

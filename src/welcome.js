@@ -9,16 +9,18 @@ export default function Welcome () {
     return (
         <div>
             <HashRouter>
-                <div>
-                    <img className="home_page_logo" src="logo.png" />
-                    <div className="whole">
-                    Welcome
+                <div className="whole">
+                    <div className="welcome">
+                        <img className="home_page_logo" src="logo.png" />
+                        <h1>Welcome to RED EYE</h1>
+                        <div>
+                        RED EYE is a social network for those who cannot sleep at night to share their thoughts
+                        </div>
                     </div>
-                    <div>
-                    RED EYE is a social network for those who cannot sleep
+                    <div className="welcome_components">
+                        <Route exact path="/" component= {register} />
+                        <Route  path="/login" component= {login} />
                     </div>
-                    <Route exact path="/" component= {register} />
-                    <Route  path="/login" component= {login} />
                 </div>
             </HashRouter>
         </div>
