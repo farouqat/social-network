@@ -78,7 +78,22 @@ module.exports.acceptFriendRequest = (loggedInId, otherUserId)=>{
         `UPDATE friendships
         SET  accepted = true
         WHERE (recipient_id = $1 AND sender_id = $2)
-        OR (recipient_id = $2 AND sender_id = $1)
+        OR (recipient_id = $2 AND sender_id = $1) RETURNING *;
         `, [loggedInId, otherUserId]
+    );
+};
+module.exports.receiveFriendsWannabes = (loggedInId)=> {
+    return db.query(`
+    SELECT users.id, first, last, profilepic_url, accepted
+    FROM friendships
+    JOIN users
+    ON (accepted = false AND sender_id = $1 AND recipient_id = users.id)
+    OR (accepted = false AND recipient_id = $1 AND sender_id = users.id)
+    OR (accepted = true AND sender_id = $1 AND sender_id = users.id)`,[loggedInId]
+    );
+};
+
+module.exports.getUsersByIds =  function (arrayOfIds) {
+    return db.query(`SELECT id, first, last, profilepic_url FROM users WHERE id = ANY($1)`,[arrayOfIds]
     );
 };

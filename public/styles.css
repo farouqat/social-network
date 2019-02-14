@@ -3,11 +3,11 @@ html{
     width: 100vw;
 }
 body{
-    background-color: darkblue;
+    background-color: white;
     margin: 0;
 }
 main {
-    font-family: Impact;
+    font-family: sans-serif;
     height: 100vh;
     width: 100vw;
     margin: 0;
@@ -17,16 +17,12 @@ main {
     justify-content: center;
     align-items: center;
 }
-.logo {
-    height: 70px;
-    width: auto;
-    top: 20;
-    left: 0;
-}
+
 .header img{
-    width: 50px;
-    height: 50px;
+    width: 70px;
+    height: 70px;
     object-fit: cover;
+    margin: 5px 10px;
 }
 
 .header {
@@ -35,46 +31,55 @@ main {
     height: 80px;
     width: 100%;
 }
+.logo_container{
+    
+}
+
 .other_profile_comp{
-    border: 5px solid black;
+    border: 2px solid black;
     margin-left: 50px;
     margin-right: 50px;
-    height: 300px;
+    height: 300%;
     display: flex;
 }
 .other_profile_profilepic{
-    height: 70px;
-    width: 70px;
+    margin: 20px;
     object-fit: cover;
 }
 
 .profile_pic{
-
+    margin: 20px;
     object-fit: cover;
 }
 .other_profile_comp img{
-    height: 300px;
-    width: 300px;
+    height: 200px;
+    width: 200px;
 }
 
 .bio_input{
     height: 100px;
     width: 300px;
 }
+
 .profile_comp{
-    border: 5px solid blue;
+    border: 2px solid black;
     margin-left: 50px;
     margin-right: 50px;
-    height: 300px;
+    height: 300%;
     display: flex;
 }
 .profile_comp img{
-    height: 300px;
-    width: 300px;
+    height: 200px;
+    width: 200px;
 }
 .bio_comp{
+    position: relative;
     background-color: white;
 
+}
+img{
+    height: 100px;
+    width: 100px;
 }
 
 .uploader_comp{

@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 const compression = require('compression');
-const cookieSession = require("cookie-session");
 const bcrypt = require("./bcrypt.js");
 const db = require("./db");
 const csurf = require("csurf");
@@ -10,9 +9,10 @@ const config = require('./config.json');
 const multer = require('multer');
 const uidSafe = require('uid-safe');
 const path = require('path');
-
-
-
+const server = require('http').Server(app);
+const cookieSession = require("cookie-session");
+//change orgines if you wanna put you project online
+const io = require('socket.io')(server, { origins: 'localhost:8080' });
 
 
 var diskStorage = multer.diskStorage({
@@ -41,12 +41,16 @@ app.use(require('body-parser').json());
 
 app.use(express.static(__dirname + "/public"));
 
-app.use(
-    cookieSession({
-        secret: `I'm always angry.`,
-        maxAge: 1000 * 60 * 60 * 24 * 14
-    })
-);
+const cookieSessionMiddleware = cookieSession({
+    secret: `I'm always angry.`,
+    maxAge: 1000 * 60 * 60 * 24 * 90
+});
+
+app.use(cookieSessionMiddleware);
+io.use(function(socket, next) {
+    cookieSessionMiddleware(socket.request, socket.request.res, next);
+});
+
 
 
 app.use(csurf());
@@ -200,27 +204,38 @@ app.get('/get-initial-status/:id', (req, res) => {
 });
 app.post('/make-friend-request/:id', (req, res) => {
     db.makeFriendRequest(req.session.userId, req.params.id).then((results) => {
-        console.log(results);
         res.json(results);
     });
 });
 app.post('/delete-friend-request/:id', (req, res) => {
     db.deleteFriendRequest(req.session.userId, req.params.id).then((results) => {
-        console.log(results);
         res.json(results);
     });
 });
 app.post('/accept-friend-request/:id', (req, res) => {
     db.acceptFriendRequest(req.session.userId, req.params.id).then((results) => {
-        console.log(results);
         res.json(results);
+    }).catch(err => {
+        console.log(err);
     });
+
 });
 
 app.get('/user', (req, res) => {
     return db.getUserInfo(req.session.userId).then((results) => {
         res.json(results);
     });
+});
+
+app.get('/friends-and-wannabes', (req, res) => {
+    return db.receiveFriendsWannabes(req.session.userId).then((results) => {
+        res.json(results);
+    });
+});
+
+app.get('/logout', (req, res) => {
+    req.session = null;
+    res.redirect('/');
 });
 
 app.get('*', function(req, res) {
@@ -232,6 +247,85 @@ app.get('*', function(req, res) {
 });
 
 
-app.listen(8080, function() {
+server.listen(8080, function() {
     console.log("I'm listening.");
 });
+
+
+
+let onlineUsers = {};
+
+io.on('connection', function(socket){
+
+    if (!socket.request.session || !socket.request.session.userId) {
+        return socket.disconnect(true);
+    }
+
+    onlineUsers[socket.id] = socket.request.session.userId;
+
+    var userIds = Object.values(onlineUsers);
+
+    console.log(userIds);
+    db.getUsersByIds(userIds).then((results) => {
+        console.log("this is results from db in index",results.rows);
+        socket.emit('onlines',
+            results.rows.filter(i => {
+                return i.id !== socket.request.session.userId;
+            })
+        );
+    });
+
+    db.getUserInfo(socket.request.session.userId).then(results => {
+        console.log("the results supposed to be my data", results.rows[0]);
+        socket.broadcast.emit('userJoined', results.rows[0]);
+    });
+
+
+    socket.on('disconnect', () => {
+        console.log("this it the disconnected user server id", onlineUsers[socket.id]);
+        let deletedId = onlineUsers[socket.id];
+        io.sockets.emit('userLeft', {
+            id: deletedId
+        });
+        delete onlineUsers[socket.id];
+    });
+
+
+    // socket.emit('chatMessage', messages);
+    //
+    // socket.emit('chatMessages', users );
+    //
+    //
+
+});
+
+
+
+// socket.on("chatMessageFromClient", async text => {
+//     const user = await db.getUserById(socket.request.session.userId);
+//
+//     io.emit('chatMessageToClient', {
+//         ...user,
+//         text
+//     });
+// });
+
+//
+// <button onClick={e => {
+//     socket.getSocket().emit('chatMessage')
+// }} send </button>
+
+// in the component did update {
+//     this.elem.scrollTop = this.elem.scrollHeight -    elem.clientHeight;
+//
+// }
+//
+//
+//
+// this in the render
+// <div id="chat-messages" ref={elem  => this.elem = elem}>
+// {this.props.chatMessages.map(msg => {
+//     <div key= {msg.id}>
+//     </div>
+// })}
+// </div>

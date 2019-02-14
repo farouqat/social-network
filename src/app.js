@@ -5,7 +5,9 @@ import Uploader from "./uploader";
 import Profile from "./profile.js";
 import OtherProfile from './otherprofile';
 import { BrowserRouter , Route } from 'react-router-dom';
-
+import Friends from './friends';
+import Onlines from './onlines';
+import Chat from './chat';
 
 export default class App extends React.Component {
     constructor(props) {
@@ -44,14 +46,15 @@ export default class App extends React.Component {
             bio: bio,
         });
     }
-
     render() {
         return (
             <div>
                 <BrowserRouter>
                     <div>
                         <div className="header">
-                            <img className="logo" src="/logo-s.png" />
+                            <div className="logo_container">
+                                <img className="logo" src="/logo-s.png" />
+                            </div>
                             <h1>Welcome, {this.state.first}!</h1>
                             <div className="small_profilepic">
                                 <ProfilePic url={this.state.profilepic_url}
@@ -74,7 +77,12 @@ export default class App extends React.Component {
                                         setBio={this.setBio}
                                         showUploader={this.showUploader}
                                     />
+
                                 )}
+                            />
+                            <Route
+                                path="/friends"
+                                component={Friends}
                             />
                             <Route
                                 path="/user/:id"
@@ -84,6 +92,18 @@ export default class App extends React.Component {
                                         match={props.match}
                                         history={props.history}
                                     />
+                                )}
+                            />
+                            <Route
+                                path="/online"
+                                render={() => (
+                                    <Onlines />
+                                )}
+                            />
+                            <Route
+                                path="/chat"
+                                render={() => (
+                                    <Chat />
                                 )}
                             />
                         </div>
