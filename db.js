@@ -96,7 +96,19 @@ module.exports.getUsersByIds =  function (arrayOfIds) {
     return db.query(`SELECT id, first, last, profilepic_url FROM users WHERE id = ANY($1)`,[arrayOfIds]
     );
 };
+
 module.exports.addMessage = function (message, sender_id) {
     return db.query(`INSERT INTO messages (messages, sender_id) VALUES ($1, $2) RETURNING *`,[message, sender_id]
+    );
+};
+
+module.exports.getMessages = () => {
+    return db.query(
+        `SELECT messages.id, messages.messages, messages.created_at, users.first, users.last, users.profilepic_url
+        FROM messages
+        JOIN users
+        ON users.id = sender_id
+        ORDER BY messages.id DESC
+        LIMIT 10`
     );
 };

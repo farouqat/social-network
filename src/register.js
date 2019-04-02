@@ -46,5 +46,4 @@ export default class Register extends React.Component {
         );
     }
 }
-
-// {this.state.error && <div className="error">Ooops!</div>}
+// {this.state.error && <div className="error">Ooops! Error </div>}

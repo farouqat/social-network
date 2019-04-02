@@ -12,11 +12,14 @@ class Chat extends React.Component{
         this.handleChange = this.handleChange.bind(this);
         this.submit = this.submit.bind(this);
     }
-    //
-    // componentDidUpdate(){
-    //     initSocket().emit
-    // }
-
+    componentDidMount(){
+    }
+    componentDidUpdate() {
+        if (!this.elem) {
+            return null;
+        }
+        this.elem.scrollTop = this.elem.scrollHeight - this.elem.clientHeight;
+    }
     handleChange(e) {
         this.setState({
             textOfMessage: e.target.value

@@ -247,26 +247,24 @@ app.get('*', function(req, res) {
 });
 
 
-server.listen(8080, function() {
+server.listen(22, 'www.faradistravel.com' , function() {
     console.log("I'm listening.");
 });
-
 
 
 let onlineUsers = {};
 
 io.on('connection', function(socket){
-
     if (!socket.request.session || !socket.request.session.userId) {
         return socket.disconnect(true);
     }
-
     onlineUsers[socket.id] = socket.request.session.userId;
 
     var userIds = Object.values(onlineUsers);
 
     db.getUsersByIds(userIds).then((results) => {
-        socket.emit('onlines',
+        console.log("results", results.rows);
+        socket.emit('onlineUsers',
             results.rows.filter(i => {
                 return i.id !== socket.request.session.userId;
             })
@@ -277,7 +275,6 @@ io.on('connection', function(socket){
         socket.broadcast.emit('userJoined', results.rows[0]);
     });
 
-
     socket.on('disconnect', () => {
         let deletedId = onlineUsers[socket.id];
         io.sockets.emit('userLeft', {
@@ -286,53 +283,46 @@ io.on('connection', function(socket){
         delete onlineUsers[socket.id];
     });
 
-    socket.on('userSentMessage', message => {
-        db.getUserById(socket.request.session.userId).then(userdata => {
-            message.first = userdata.rows[0].first;
-            message.last = userdata.rows[0].last;
-            message.profilepic_url = userdata.rows[0].profilepic_url;
+    db.getMessages()
+        .then(data => {
+            // console.log("Whats in get Messages?:", data.rows);
+            socket.emit("allMessages", {
+                messages: data.rows.reverse()
+            });
+
+        })
+        .catch(err => {
+            console.log(err.message);
         });
+
+
+    socket.emit('chatMessages', onlineUsers );
+    socket.on('userSentMessage', message => {
         db.addMessage(message.message, socket.request.session.userId)
             .then(data => {
                 socket.emit('newMessage', data.rows[0].messages);
             })
             .catch(err => console.log(err.message));
+
+        db.getUserById(socket.request.session.userId).then(userdata => {
+            message.first = userdata.rows[0].first;
+            message.last = userdata.rows[0].last;
+            message.profilepic_url = userdata.rows[0].profilepic_url;
+        });
     });
-
-
-    // socket.emit('chatMessages', users );
-    //;
-    //
-
+    socket.on("singleMessage", function(message) {
+        db.insertMessage(message.message, socket.request.session.userId)
+            .then(data => {
+                data.rows[0].first = message.first;
+                data.rows[0].last = message.last;
+                data.rows[0].url = message.pic;
+                // console.log("Added ALL to DataROws: ", data.rows[0]);
+                io.emit("chatMessage", {
+                    message: data.rows[0]
+                });
+            })
+            .catch(err => {
+                console.log(err.message);
+            });
+    });
 });
-
-
-
-// socket.on("chatMessageFromClient", async text => {
-//     const user = await db.getUserById(socket.request.session.userId);
-//
-//     io.emit('chatMessageToClient', {
-//         ...user,
-//         text
-//     });
-// });
-
-
-// <button onClick={e => {
-//     socket.getSocket().emit('chatMessage')
-// }} send </button>
-
-// in the component did update {
-//     this.elem.scrollTop = this.elem.scrollHeight -    elem.clientHeight;
-//
-// }
-//
-//
-//
-// this in the render
-// <div id="chat-messages" ref={elem  => this.elem = elem}>
-// {this.props.chatMessages.map(msg => {
-//     <div key= {msg.id}>
-//     </div>
-// })}
-// </div>

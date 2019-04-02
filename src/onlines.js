@@ -7,12 +7,15 @@ class Onlines extends React.Component {
     constructor(props){
         super(props);
     }
+    componentDidMount(){
+        console.log('componentDidMount');
+        console.log("props of onlines", this.props.onlines);
+    }
     render() {
         if (!this.props.onlines){
             return null;
         }
         return (
-
             <div>
                 <h1>Online users: </h1>
                 {this.props.onlines && this.props.onlines.map(
