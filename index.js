@@ -247,7 +247,7 @@ app.get('*', function(req, res) {
 });
 
 
-server.listen(22, 'www.faradistravel.com' , function() {
+server.listen('8080' , function() {
     console.log("I'm listening.");
 });
 
